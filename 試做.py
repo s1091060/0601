@@ -271,7 +271,7 @@ KBar_df['Signal'] = KBar_df['MACD'].ewm(span=SignalEMA, adjust=False).mean()
 KBar_df['Hist'] = KBar_df['MACD'] - KBar_df['Signal']
 
 #尋找最後nan值
-#last_nan_index_MACD = KBar_df['MACD'][::-1].index[KBar_df['MACD'][::-1].apply(pd.isna)][0]
+last_nan_index_MACD = KBar_df['MACD'][::-1].index[KBar_df['MACD'][::-1].apply(pd.isna)][0]
 
 #計算布林通道
 st.subheader("設定計算布林通道的週期和標準差倍數")
