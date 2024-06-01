@@ -258,11 +258,32 @@ last_nan_index_RSI = KBar_df['RSI_long'][::-1].index[KBar_df['RSI_long'][::-1].a
 # ### 將K線 Dictionary 轉換成 Dataframe
 # KBar_RSI_df=pd.DataFrame(KBar_dic)
 
-# 計算 MACD
+# MACD策略
+#設定macd k棒長度
 st.subheader("設定計算MACD的週期")
 ShortEMA = st.slider('短期EMA (例如12)', 1, 100, 12)
 LongEMA = st.slider('長期EMA (例如26)', 1, 100, 26)
 SignalEMA = st.slider('信號EMA (例如9)', 1, 100, 9)
+
+##計算macd
+
+def calculate_macd(df, short_period=12, long_period=26, signal_period=9):
+    delta = df['close'].diff()
+    # 計算短期EMA
+    short_ema = df['close'].ewm(span=short_period, adjust=False).mean()
+    # 計算長期EMA
+    long_ema = df['close'].ewm(span=long_period, adjust=False).mean()
+    # 計算MACD線
+    macd_line = short_ema - long_ema
+    # 計算信號線
+    signal_line = macd_line.ewm(span=signal_period, adjust=False).mean()
+    # 計算MACD柱
+    macd_histogram = macd_line - signal_line
+    
+    return macd_line, signal_line, macd_histogram
+
+# 將 MACD 計算結果加入 DataFrame
+KBar_df['MACD_line'], KBar_df['Signal_line'], KBar_df['MACD_histogram'] = calculate_macd(KBar_df)
 
 KBar_df['EMA_short'] = KBar_df['close'].ewm(span=ShortEMA, adjust=False).mean()
 KBar_df['EMA_long'] = KBar_df['close'].ewm(span=LongEMA, adjust=False).mean()
