@@ -292,7 +292,7 @@ KBar_df['Signal'] = KBar_df['MACD'].ewm(span=SignalEMA, adjust=False).mean()
 KBar_df['Hist'] = KBar_df['MACD'] - KBar_df['Signal']
 
 #尋找最後nan值
-last_nan_index_MACD = KBar_df['MACD'].isna()[::-1].idxmax()
+#last_nan_index_MACD = KBar_df['MACD'].isna()[::-1].idxmax()
 
 #計算布林通道
 st.subheader("設定計算布林通道的週期和標準差倍數")
@@ -306,7 +306,7 @@ KBar_df['Upper'] = KBar_df['MA'] + (KBar_df['STD'] * BollingerStdDev)
 KBar_df['Lower'] = KBar_df['MA'] - (KBar_df['STD'] * BollingerStdDev)
 
 #尋找最後nan值
-last_nan_index_BB = KBar_df['MA'][::-1].index[KBar_df['MA'][::-1].apply(pd.isna)][0]
+#last_nan_index_BB = KBar_df['MA'][::-1].index[KBar_df['MA'][::-1].apply(pd.isna)][0]
 
 
 ###### (5) 將 Dataframe 欄位名稱轉換  ###### 
@@ -341,6 +341,8 @@ with st.expander("K線圖, 移動平均線"):
     
     fig1.layout.yaxis2.showgrid=True
     st.plotly_chart(fig1, use_container_width=True)
+    
+   
 
 
 ##### K線圖, RSI
@@ -368,9 +370,9 @@ with st.expander("K線圖, MACD"):
                     low=KBar_df['Low'], close=KBar_df['Close'], name='K線'),
                    secondary_y=True)
     #fig3.add_trace(go.Bar(x=KBar_df['Time'], y=KBar_df['Volume'], name='成交量', marker=dict(color='black')), secondary_y=False)
-    fig3.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['MACD'][last_nan_index_MA+1:], mode='lines', line=dict(color='blue', width=2), name='MACD'), secondary_y=True)
-    fig3.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['Signal'][last_nan_index_MA+1:], mode='lines', line=dict(color='red', width=2), name='信號線'), secondary_y=True)
-    fig3.add_trace(go.Bar(x=KBar_df['Time'][last_nan_index_MA+1:], y=KBar_df['Hist'][last_nan_index_MA+1:], name='MACD 柱狀圖', marker=dict(color='green')), secondary_y=True)
+    fig3.add_trace(go.Scatter(x=KBar_df['Time'], y=KBar_df['MACD'], mode='lines', line=dict(color='blue', width=2), name='MACD'), secondary_y=True)
+    fig3.add_trace(go.Scatter(x=KBar_df['Time'], y=KBar_df['Signal'], mode='lines', line=dict(color='red', width=2), name='信號線'), secondary_y=True)
+    fig3.add_trace(go.Bar(x=KBar_df['Time'], y=KBar_df['Hist'], name='MACD 柱狀圖', marker=dict(color='green')), secondary_y=True)
     fig3.layout.yaxis2.showgrid = True
     st.plotly_chart(fig3, use_container_width=True)
 
@@ -382,9 +384,9 @@ with st.expander("K線圖, 布林通道"):
                     low=KBar_df['low'], close=KBar_df['close'], name='K線'),
                    secondary_y=True)
     #fig4.add_trace(go.Bar(x=KBar_df['time'], y=KBar_df['volume'], name='成交量', marker=dict(color='black')), secondary_y=False)
-    fig4.add_trace(go.Scatter(x=KBar_df['time'][last_nan_index_BB+1:], y=KBar_df['MA'][last_nan_index_BB+1:], mode='lines', line=dict(color='blue', width=2), name='移動平均線'), secondary_y=True)
-    fig4.add_trace(go.Scatter(x=KBar_df['time'][last_nan_index_BB+1:], y=KBar_df['Upper'][last_nan_index_BB+1:], mode='lines', line=dict(color='green', width=2), name='上軌'), secondary_y=True)
-    fig4.add_trace(go.Scatter(x=KBar_df['time'][last_nan_index_BB+1:], y=KBar_df['Lower'][last_nan_index_BB+1:], mode='lines', line=dict(color='red', width=2), name='下軌'), secondary_y=True)
+    fig4.add_trace(go.Scatter(x=KBar_df['time'], y=KBar_df['MA'], mode='lines', line=dict(color='blue', width=2), name='移動平均線'), secondary_y=True)
+    fig4.add_trace(go.Scatter(x=KBar_df['time'], y=KBar_df['Upper'], mode='lines', line=dict(color='green', width=2), name='上軌'), secondary_y=True)
+    fig4.add_trace(go.Scatter(x=KBar_df['time'], y=KBar_df['Lower'], mode='lines', line=dict(color='red', width=2), name='下軌'), secondary_y=True)
     fig4.layout.yaxis2.showgrid = True
     st.plotly_chart(fig4, use_container_width=True)
 
